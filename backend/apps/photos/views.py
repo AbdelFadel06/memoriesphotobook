@@ -55,13 +55,21 @@ class ConfirmView(APIView):
         return Response(PhotoSerializer(photo).data, status=status.HTTP_202_ACCEPTED)
 
 
+MAX_IDS = 500
+
+
 class PhotoPagination(CursorPagination):
     ordering = "created_at"
     page_size = 100
+    max_page_size = MAX_IDS
+    page_size_query_param = "page_size"
 
 
 @extend_schema(
-    parameters=[OpenApiParameter("album", OpenApiTypes.INT, description="Photos of one album")]
+    parameters=[
+        OpenApiParameter("album", OpenApiTypes.INT, description="Photos of one album"),
+        OpenApiParameter("ids", OpenApiTypes.STR, description="Comma-separated photo ids"),
+    ]
 )
 class PhotoListView(generics.ListAPIView):
     serializer_class = PhotoSerializer
@@ -74,4 +82,8 @@ class PhotoListView(generics.ListAPIView):
         album = self.request.query_params.get("album")
         if album is not None:
             queryset = queryset.filter(album_id=album if album.isdigit() else -1)
+        ids = self.request.query_params.get("ids")
+        if ids is not None:
+            wanted = [int(part) for part in ids.split(",") if part.isdigit()][:MAX_IDS]
+            queryset = queryset.filter(pk__in=wanted)
         return queryset

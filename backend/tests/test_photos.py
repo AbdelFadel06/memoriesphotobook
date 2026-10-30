@@ -167,3 +167,13 @@ def test_list_filters_by_album(auth_api: APIClient, user: User) -> None:
     PhotoFactory(owner=user)
     res = auth_api.get(f"/api/photos?album={album.pk}")
     assert [p["id"] for p in res.data["results"]] == [in_album.pk]
+
+
+def test_list_filters_by_ids_of_own_photos(
+    auth_api: APIClient, user: User, other_user: User
+) -> None:
+    a, b = PhotoFactory(owner=user), PhotoFactory(owner=user)
+    PhotoFactory(owner=user)
+    foreign = PhotoFactory(owner=other_user)
+    res = auth_api.get(f"/api/photos?ids={a.pk},{b.pk},{foreign.pk},x")
+    assert sorted(p["id"] for p in res.data["results"]) == sorted([a.pk, b.pk])
