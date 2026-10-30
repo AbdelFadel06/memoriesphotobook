@@ -1,0 +1,11 @@
+{
+  "bleedMm": 3,
+  "safetyMm": 8,
+  "gutterMm": 10,
+  "formats": {
+    "A4_portrait": { "widthMm": 210, "heightMm": 297 },
+    "A5_portrait": { "widthMm": 148, "heightMm": 210 },
+    "square_21": { "widthMm": 210, "heightMm": 210 },
+    "A4_landscape": { "widthMm": 297, "heightMm": 210 }
+  }
+}
