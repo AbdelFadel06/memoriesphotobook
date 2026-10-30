@@ -4,6 +4,7 @@ from pathlib import Path
 
 import dj_database_url
 import django_stubs_ext
+from celery.schedules import crontab
 
 # Makes Django generics such as BaseUserManager[User] subscriptable at runtime.
 django_stubs_ext.monkeypatch()
@@ -123,6 +124,18 @@ CELERY_TASK_ROUTES = {
     "apps.exports.tasks.*": {"queue": "pdf"},
 }
 CELERY_TASK_ACKS_LATE = True
+CELERY_BEAT_SCHEDULE = {
+    "purge-deleted-albums": {
+        "task": "apps.albums.tasks.purge_deleted_albums",
+        "schedule": crontab(hour=3, minute=30),
+        "options": {"queue": "maintenance"},
+    },
+    "cleanup-exports": {
+        "task": "apps.exports.tasks.cleanup_exports",
+        "schedule": crontab(hour=3, minute=0),
+        "options": {"queue": "maintenance"},
+    },
+}
 CELERY_WORKER_PREFETCH_MULTIPLIER = 1
 
 # --- Storage (S3-compatible, private bucket) ---
@@ -134,6 +147,13 @@ S3_BUCKET = os.environ.get("S3_BUCKET", "photobook")
 S3_REGION = os.environ.get("S3_REGION", "us-east-1")
 SIGNED_URL_TTL_SECONDS = 15 * 60
 
+# --- PDF export ---
+# The PDF worker renders pages with the frontend's /print route (single renderer).
+FRONTEND_INTERNAL_URL = os.environ.get("FRONTEND_INTERNAL_URL", "http://frontend:3000")
+PRINT_DPI = 300
+PDF_RENDER_TIMEOUT_SECONDS = 5 * 60
+EXPORT_RETENTION_DAYS = 30
+
 # --- Shared layouts (single source of truth for formats, themes, templates) ---
 SHARED_LAYOUTS_DIR = Path(
     os.environ.get("SHARED_LAYOUTS_DIR", BASE_DIR.parent / "shared" / "layouts")
@@ -141,8 +161,11 @@ SHARED_LAYOUTS_DIR = Path(
 
 # --- Quotas (defaults, configurable) ---
 PHOTO_MAX_BYTES = 30 * 1024 * 1024
+AVATAR_MAX_BYTES = 5 * 1024 * 1024
 PHOTO_ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic"]
 PHOTOS_PER_ALBUM = 300
+ALBUM_VERSIONS_KEPT = 50
+DELETED_ALBUMS_RETENTION_DAYS = 30
 STORAGE_PER_USER_BYTES = 5 * 1024**3
 DEFAULT_PHOTO_QUOTA = 3000
 EXPORTS_CONCURRENT_PER_USER = 3

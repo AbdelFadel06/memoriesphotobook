@@ -32,8 +32,13 @@ class FakeStorage:
 
 
 @pytest.fixture(autouse=True)
-def fake_storage(monkeypatch: pytest.MonkeyPatch) -> Iterator[FakeStorage]:
+def fake_storage(
+    request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch
+) -> Iterator[FakeStorage]:
     fake = FakeStorage()
+    if request.node.get_closest_marker("pdf_integration"):
+        yield fake  # real storage
+        return
     for name in ("presign_upload", "presign_download", "object_size", "read", "write", "delete"):
         monkeypatch.setattr(storage, name, getattr(fake, name))
     yield fake

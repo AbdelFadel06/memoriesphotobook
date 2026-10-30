@@ -1,0 +1,12 @@
+{
+  "id": "spread_full",
+  "name": "Double page pleine",
+  "photos": 1,
+  "spread": true,
+  "strength": "strong",
+  "accepts": ["landscape"],
+  "slots": {
+    "photo1": { "type": "photo", "x": 0, "y": 0, "w": 100, "h": 100 }
+  },
+  "decor": []
+}

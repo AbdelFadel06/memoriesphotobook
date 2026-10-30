@@ -1,0 +1,14 @@
+{
+  "themes": [
+    "galerie_claire",
+    "bloc_couleur"
+  ],
+  "templates": [
+    "cover_block",
+    "full_bleed",
+    "photo_caption",
+    "two_side_by_side",
+    "spread_full",
+    "text_page"
+  ]
+}

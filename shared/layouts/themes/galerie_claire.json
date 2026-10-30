@@ -1,0 +1,24 @@
+{
+  "id": "galerie_claire",
+  "name": "Galerie claire",
+  "defaultAccent": "#3b3b3b",
+  "colors": {
+    "background": "#f7f4ef",
+    "text": "#2a2826",
+    "muted": "#6f6a63",
+    "onAccent": "#f7f4ef",
+    "photoBackdrop": "#e6e1d9"
+  },
+  "fonts": {
+    "display": "Cormorant Garamond",
+    "body": "Inter"
+  },
+  "typography": {
+    "title": { "font": "display", "size": 5.6, "weight": 500, "lineHeight": 1.1 },
+    "subtitle": { "font": "body", "size": 1.7, "weight": 500, "letterSpacing": 0.2, "transform": "uppercase" },
+    "caption": { "font": "body", "size": 1.8, "weight": 400, "lineHeight": 1.5 },
+    "paragraph": { "font": "body", "size": 2.0, "weight": 400, "lineHeight": 1.6 },
+    "runningTitle": { "font": "body", "size": 1.4, "weight": 500, "letterSpacing": 0.35, "transform": "uppercase" },
+    "folio": { "font": "body", "size": 1.4, "weight": 400 }
+  }
+}

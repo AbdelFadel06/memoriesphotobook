@@ -1,0 +1,24 @@
+{
+  "id": "bloc_couleur",
+  "name": "Bloc couleur",
+  "defaultAccent": "#d9542b",
+  "colors": {
+    "background": "#1d1c1b",
+    "text": "#f3f0ea",
+    "muted": "#b9b3aa",
+    "onAccent": "#ffffff",
+    "photoBackdrop": "#2c2a28"
+  },
+  "fonts": {
+    "display": "Oswald",
+    "body": "Inter"
+  },
+  "typography": {
+    "title": { "font": "display", "size": 7.2, "weight": 600, "lineHeight": 1.0, "transform": "uppercase" },
+    "subtitle": { "font": "body", "size": 1.8, "weight": 600, "letterSpacing": 0.15, "transform": "uppercase" },
+    "caption": { "font": "body", "size": 1.8, "weight": 400, "lineHeight": 1.5 },
+    "paragraph": { "font": "body", "size": 2.0, "weight": 400, "lineHeight": 1.6 },
+    "runningTitle": { "font": "display", "size": 1.8, "weight": 500, "letterSpacing": 0.2, "transform": "uppercase" },
+    "folio": { "font": "body", "size": 1.4, "weight": 600 }
+  }
+}

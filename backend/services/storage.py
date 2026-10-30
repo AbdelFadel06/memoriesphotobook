@@ -38,11 +38,12 @@ def presign_upload(key: str, content_type: str, size: int) -> str:
     return url
 
 
-def presign_download(key: str, filename: str | None = None) -> str:
+def presign_download(key: str, filename: str | None = None, *, internal: bool = False) -> str:
+    """Signed GET URL; `internal` signs for services inside the Docker network."""
     params: dict[str, str] = {"Bucket": settings.S3_BUCKET, "Key": key}
     if filename:
         params["ResponseContentDisposition"] = f'attachment; filename="{filename}"'
-    url: str = client(public=True).generate_presigned_url(
+    url: str = client(public=not internal).generate_presigned_url(
         "get_object", Params=params, ExpiresIn=settings.SIGNED_URL_TTL_SECONDS
     )
     return url

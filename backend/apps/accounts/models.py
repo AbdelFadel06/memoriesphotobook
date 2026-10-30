@@ -39,6 +39,9 @@ class User(AbstractUser):
     first_name = None  # type: ignore[assignment]
     last_name = None  # type: ignore[assignment]
     email = models.EmailField(unique=True)
+    # Display name shown on the profile; optional, the email is used otherwise.
+    name = models.CharField(max_length=120, blank=True)
+    avatar_key = models.CharField(max_length=512, blank=True)
     quota_photos = models.PositiveIntegerField(default=default_photo_quota)
     plan = models.CharField(max_length=20, choices=Plan.choices, default=Plan.FREE)
     created_at = models.DateTimeField(auto_now_add=True)

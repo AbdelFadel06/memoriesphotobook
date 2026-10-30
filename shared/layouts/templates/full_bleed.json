@@ -1,0 +1,12 @@
+{
+  "id": "full_bleed",
+  "name": "Plein cadre",
+  "photos": 1,
+  "spread": false,
+  "strength": "strong",
+  "accepts": ["portrait", "square"],
+  "slots": {
+    "photo1": { "type": "photo", "x": 0, "y": 0, "w": 100, "h": 100 }
+  },
+  "decor": []
+}

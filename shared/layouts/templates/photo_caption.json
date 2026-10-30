@@ -1,0 +1,18 @@
+{
+  "id": "photo_caption",
+  "name": "Photo et légende",
+  "photos": 1,
+  "spread": false,
+  "strength": "calm",
+  "accepts": ["portrait", "landscape", "square"],
+  "slots": {
+    "photo1": { "type": "photo", "x": 16, "y": 8, "w": 72, "h": 62 },
+    "title": { "type": "text", "role": "title", "x": 16, "y": 74, "w": 72, "h": 7 },
+    "caption": { "type": "text", "role": "caption", "option": "captions", "x": 16, "y": 81, "w": 72, "h": 9 }
+  },
+  "decor": [
+    { "type": "runningTitle", "option": "verticalTitle", "x": 6, "y": 8, "w": 5, "h": 62 },
+    { "type": "line", "option": "line", "x": 16, "y": 72.5, "w": 10, "h": 0.25 },
+    { "type": "folio", "x": 44, "y": 92, "w": 12, "h": 3 }
+  ]
+}

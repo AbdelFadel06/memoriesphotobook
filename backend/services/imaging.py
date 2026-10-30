@@ -12,6 +12,8 @@ from apps.layouts.catalog import PrintFormat
 THUMB_SIZE = 400
 PREVIEW_SIZE = 1600
 JPEG_QUALITY = 85
+PRINT_JPEG_QUALITY = 92
+AVATAR_SIZE = 400
 
 # Loaders accepted after sniffing the real content (magic bytes), whatever the extension.
 ALLOWED_LOADERS = {"jpegload_buffer", "pngload_buffer", "webpload_buffer", "heifload_buffer"}
@@ -69,6 +71,35 @@ def process(data: bytes) -> ProcessedImage:
         thumb=_jpeg(thumb),
         preview=_jpeg(preview),
     )
+
+
+def print_derivative(data: bytes, max_long_px: int) -> bytes:
+    """Upright sRGB JPEG for the PDF, never upscaled, without metadata."""
+    try:
+        header = pyvips.Image.new_from_buffer(data, "", access="sequential")
+    except pyvips.Error as exc:
+        raise InvalidImage("unreadable image") from exc
+    icc = {"export_profile": "srgb"} if header.get_typeof("icc-profile-data") else {}
+    image = _to_srgb(
+        pyvips.Image.thumbnail_buffer(data, max_long_px, height=max_long_px, size="down", **icc)
+    )
+    out: bytes = image.jpegsave_buffer(Q=PRINT_JPEG_QUALITY, strip=True, optimize_coding=True)
+    return out
+
+
+def avatar(data: bytes, size: int = AVATAR_SIZE) -> bytes:
+    """Square, upright, sRGB JPEG cropped on the most interesting area, without metadata."""
+    try:
+        header = pyvips.Image.new_from_buffer(data, "", access="sequential")
+    except pyvips.Error as exc:
+        raise InvalidImage("unreadable image") from exc
+    if header.get("vips-loader") not in ALLOWED_LOADERS:
+        raise InvalidImage("unsupported image type")
+    icc = {"export_profile": "srgb"} if header.get_typeof("icc-profile-data") else {}
+    image = _to_srgb(
+        pyvips.Image.thumbnail_buffer(data, size, height=size, crop="attention", **icc)
+    )
+    return _jpeg(image)
 
 
 def orientation_of(width: int, height: int) -> str:

@@ -1,0 +1,11 @@
+/*
+ * Album fonts, self-hosted (Google Fonts via Fontsource), never loaded from a CDN.
+ * Static fonts on purpose: Chromium embeds variable fonts as Type 3 in PDFs, which printers reject.
+ * Only the weights used by shared/layouts/themes are loaded.
+ */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/cormorant-garamond/500.css";
+@import "@fontsource/oswald/500.css";
+@import "@fontsource/oswald/600.css";

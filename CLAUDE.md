@@ -210,9 +210,8 @@ backend/
 │   ├── imaging.py           miniatures, couleurs dominantes, qualité
 │   ├── pdf_renderer.py      HTML → PDF avec Playwright
 │   └── storage.py           URLs présignées
-├── render/templates/        page HTML d'impression
 ├── Dockerfile
-└── Dockerfile.pdf           image avec Chromium
+└── Dockerfile.pdf           image avec Chromium (le HTML d'impression est la route /print du frontend)
 ```
 
 Règle : la logique métier vit dans `services/`, pas dans les vues ni les serializers.
@@ -293,9 +292,13 @@ Règles déterministes, sans IA :
 ## Export PDF (`services/pdf_renderer.py`)
 
 - Exécuté dans le worker `pdf-worker` (file `pdf`), concurrence 1 par conteneur.
-- Génère une page HTML par page/double page à partir de la **même** définition de gabarit que le front,
-  avec `@page { size: <largeur+6mm> <hauteur+6mm>; margin: 0 }` et fond perdu inclus.
-- Les images utilisées sont les **originaux** (ou une version redimensionnée à 300 dpi pour limiter le poids).
+- Chromium ouvre la route `/print` du frontend (`FRONTEND_INTERNAL_URL`) et appelle `window.__pbRender(payload)`
+  pour chaque page/double page : c'est le **même** composant `page-render` que l'éditeur.
+  La page pose `@page { size: <largeur+6mm> <hauteur+6mm>; margin: 0 }`, fond perdu inclus.
+  Un PDF par feuille, assemblés avec pikepdf (métadonnées fixes, `deterministic_id`).
+- Seules les requêtes vers le frontend et le stockage sont autorisées (interception Playwright).
+- Les images sont des dérivés d'impression construits depuis les **originaux** : 300 dpi pour leur plus grand usage,
+  jamais agrandis, sRVB, sans métadonnées, mis en cache dans le stockage (`*_print_<px>.jpg`). HEIC géré.
 - Attendre `document.fonts.ready` et le chargement de toutes les images avant `page.pdf()`.
 - `print_background: true`, `prefer_css_page_size: true`.
 - Stocker le PDF, mettre à jour `ExportJob`, supprimer les PDF de plus de 30 jours (`cleanup_exports`).

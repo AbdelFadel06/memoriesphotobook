@@ -1,0 +1,17 @@
+{
+  "id": "two_side_by_side",
+  "name": "Deux photos côte à côte",
+  "photos": 2,
+  "spread": false,
+  "strength": "calm",
+  "accepts": ["portrait", "square"],
+  "slots": {
+    "photo1": { "type": "photo", "x": 8, "y": 12, "w": 41, "h": 62 },
+    "photo2": { "type": "photo", "x": 51, "y": 12, "w": 41, "h": 62 },
+    "title": { "type": "text", "role": "title", "x": 8, "y": 78, "w": 84, "h": 7 },
+    "caption": { "type": "text", "role": "caption", "option": "captions", "x": 8, "y": 85, "w": 84, "h": 6 }
+  },
+  "decor": [
+    { "type": "folio", "x": 44, "y": 92, "w": 12, "h": 3 }
+  ]
+}

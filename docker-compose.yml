@@ -1,4 +1,6 @@
 x-backend: &backend
+  # web and worker share one image so they never drift apart
+  image: photobook-backend:dev
   build: ./backend
   env_file: .env
   volumes:
@@ -21,7 +23,35 @@ services:
 
   worker:
     <<: *backend
-    command: celery -A config worker -Q images,maintenance -l info
+    # -B runs the beat scheduler (cleanup_exports) in this single worker.
+    command: celery -A config worker -B -Q images,maintenance -l info
+
+  pdf-worker:
+    <<: *backend
+    image: photobook-pdf:dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.pdf
+    command: celery -A config worker -Q pdf --concurrency 1 -l info
+    environment:
+      FRONTEND_INTERNAL_URL: http://frontend:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      storage:
+        condition: service_started
+      frontend:
+        condition: service_started
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api
+    # Not published: only the pdf-worker uses it. Develop with `npm run dev` on the host.
 
   postgres:
     image: postgres:16-alpine

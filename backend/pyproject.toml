@@ -14,6 +14,7 @@ select = ["E", "F", "I", "B", "UP", "DJ"]
 addopts = "--ds=config.settings.test"
 python_files = ["test_*.py"]
 testpaths = ["tests"]
+markers = ["pdf_integration: needs Chromium, the frontend and real storage (pdf-worker)"]
 
 [tool.mypy]
 python_version = "3.12"

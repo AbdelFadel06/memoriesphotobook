@@ -31,6 +31,10 @@ def _load(name: str) -> dict[str, Any]:
     return data
 
 
+def formats_file() -> dict[str, Any]:
+    return _load("formats.json")
+
+
 def formats() -> dict[str, PrintFormat]:
     data = _load("formats.json")
     return {
@@ -41,6 +45,18 @@ def formats() -> dict[str, PrintFormat]:
 
 def get_format(format_id: str) -> PrintFormat:
     return formats()[format_id]
+
+
+def templates() -> dict[str, dict[str, Any]]:
+    return {tid: _load(f"templates/{tid}.json") for tid in _load("index.json")["templates"]}
+
+
+def themes() -> dict[str, dict[str, Any]]:
+    return {tid: _load(f"themes/{tid}.json") for tid in _load("index.json")["themes"]}
+
+
+def get_template(template_id: str) -> dict[str, Any]:
+    return templates()[template_id]
 
 
 def format_choices() -> list[tuple[str, str]]:
