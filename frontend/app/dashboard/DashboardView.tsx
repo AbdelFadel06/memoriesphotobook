@@ -6,7 +6,8 @@ import {
   useQueryClient,
   type InfiniteData,
 } from "@tanstack/react-query";
-import { BookImage, LoaderCircle } from "lucide-react";
+import { BookImage, LoaderCircle, Plus } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 import AlbumCard from "@/components/dashboard/AlbumCard";
@@ -68,10 +69,15 @@ export default function DashboardView() {
       <AppHeader />
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-        <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">
-          Mes albums
-        </h1>
-        <p className="mt-1 text-neutral-500">Du plus récent au plus ancien.</p>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">
+              Mes albums
+            </h1>
+            <p className="mt-1 text-neutral-500">Du plus récent au plus ancien.</p>
+          </div>
+          <CreateButton />
+        </div>
 
         <div className="mt-8">
           {loading ? (
@@ -102,7 +108,12 @@ export default function DashboardView() {
               <p className="mt-4 text-lg font-medium text-neutral-900">
                 Vous n&apos;avez pas encore d&apos;album
               </p>
-              <p className="mt-1 text-neutral-500">La création d&apos;album arrive très bientôt.</p>
+              <p className="mt-1 text-neutral-500">
+                Quelques photos suffisent : la mise en page est automatique.
+              </p>
+              <div className="mt-6">
+                <CreateButton />
+              </div>
             </div>
           ) : (
             <>
@@ -156,5 +167,17 @@ function Grid({ children }: { children: React.ReactNode }) {
     <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4">
       {children}
     </div>
+  );
+}
+
+function CreateButton() {
+  return (
+    <Link
+      href="/albums/new"
+      className="flex h-12 items-center gap-2 rounded-full bg-neutral-900 px-6 font-medium text-white shadow-[0_12px_24px_-10px_rgb(0_0_0/0.45)] transition hover:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+    >
+      <Plus aria-hidden className="size-5" strokeWidth={2.25} />
+      Créer un album
+    </Link>
   );
 }

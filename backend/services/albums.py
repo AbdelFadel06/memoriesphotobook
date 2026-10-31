@@ -39,6 +39,7 @@ def create(
     photo_ids: list[int],
     accent: str | None = None,
     options: dict[str, bool] | None = None,
+    keep_order: bool = False,
 ) -> Album:
     if format_id not in catalog.formats():
         raise ApiError("unknown_format", "Format d'album inconnu.")
@@ -55,7 +56,10 @@ def create(
         raise ApiError(
             "photos_processing", "Vos photos sont encore en préparation.", status_code=409
         )
-    photos = [p for p in photos if p.status == Photo.Status.READY]
+    position = {pk: index for index, pk in enumerate(photo_ids)}
+    photos = sorted(
+        (p for p in photos if p.status == Photo.Status.READY), key=lambda p: position[p.pk]
+    )
 
     seed = random.randrange(2**31)
     content = autolayout.build(
@@ -66,6 +70,7 @@ def create(
         seed=seed,
         title=title,
         options=options,
+        keep_order=keep_order,
     )
     with transaction.atomic():
         album = Album.objects.create(

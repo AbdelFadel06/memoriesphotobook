@@ -15,6 +15,8 @@ class AlbumCreateSerializer(serializers.Serializer):
     accent = serializers.RegexField(r"^#[0-9a-fA-F]{6}$", required=False)
     options = serializers.DictField(child=serializers.BooleanField(), required=False)
     photo_ids = serializers.ListField(child=serializers.IntegerField(min_value=1), max_length=1000)
+    # "date": chronological (default); "manual": keep the order of photo_ids.
+    order = serializers.ChoiceField(choices=["date", "manual"], default="date")
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)

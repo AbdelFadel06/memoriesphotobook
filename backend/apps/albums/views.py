@@ -60,6 +60,7 @@ class AlbumListCreateView(generics.ListAPIView):
             photo_ids=data["photo_ids"],
             accent=data.get("accent"),
             options=data.get("options"),
+            keep_order=data["order"] == "manual",
         )
         return Response(AlbumDetailSerializer(album).data, status=status.HTTP_201_CREATED)
 

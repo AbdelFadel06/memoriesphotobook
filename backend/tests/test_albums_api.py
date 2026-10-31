@@ -240,3 +240,14 @@ def test_catalog_is_public(api: APIClient) -> None:
     assert {t["id"] for t in res.data["themes"]} == {"galerie_claire", "bloc_couleur"}
     assert "text_page" in {t["id"] for t in res.data["templates"]}
     assert res.data["formats"]["bleedMm"] == 3
+
+
+def test_create_keeps_manual_order(auth_api: APIClient, user: User) -> None:
+    photos = ready_photos(user, "square", "square", "square", "square")
+    ids = [photos[2].pk, photos[0].pk, photos[3].pk, photos[1].pk]
+    res = create(auth_api, ids, order="manual")
+    placed = [
+        s["photoId"] for p in res.data["content"]["pages"] for s in p["slots"] if s.get("photoId")
+    ]
+    cover = placed[0]
+    assert placed[1:] == [i for i in ids if i != cover]

@@ -91,3 +91,17 @@ export async function fetchPhotoSources(ids: number[]): Promise<Record<number, {
     page.results.filter((p) => p.preview_url).map((p) => [p.id, { src: p.preview_url! }]),
   );
 }
+
+export type NewAlbum = {
+  title: string;
+  format: string;
+  theme: string;
+  accent: string;
+  options: { verticalTitle: boolean; line: boolean; captions: boolean };
+  photo_ids: number[];
+  order: "date" | "manual";
+};
+
+export function createAlbum(album: NewAlbum): Promise<AlbumDetail> {
+  return apiRequest("POST", "albums", albumDetailSchema, { ...auth(), body: album });
+}

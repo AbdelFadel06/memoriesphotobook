@@ -99,3 +99,12 @@ def test_photos_follow_chronology() -> None:
     shuffled = [items[3], items[0], items[5], items[1], items[4], items[2]]
     order = placed(layout(shuffled, seed=3))
     assert order[1:] == sorted(order[1:])  # after the cover, by date
+
+
+def test_keep_order_follows_the_given_order() -> None:
+    items = photos("SSSSSS")
+    given = [items[3], items[0], items[5], items[1], items[4], items[2]]
+    content = layout(given, seed=3, keep_order=True)
+    cover_id = next(s["photoId"] for s in content["pages"][0]["slots"] if "photoId" in s)
+    expected = [p.id for p in given if p.id != cover_id]
+    assert placed(content)[1:] == expected

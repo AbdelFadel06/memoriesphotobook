@@ -43,9 +43,11 @@ def build(
     seed: int,
     title: str = "",
     options: dict[str, bool] | None = None,
+    keep_order: bool = False,
 ) -> dict[str, Any]:
+    """`keep_order`: the user arranged the photos, otherwise they go in chronological order."""
     rng = random.Random(seed)
-    ordered = sort_photos(photos)
+    ordered = list(photos) if keep_order else sort_photos(photos)
     pages: list[dict[str, Any]] = []
 
     cover_photo = _cover_photo(ordered)
